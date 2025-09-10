@@ -14,15 +14,15 @@ pipeline{
             
         }
     }
-    stages{
+    
         stage("checkup"){
             steps{
                 git branch:main, url:'https://github.com/chumaedeogu/MY-DevSecOps.git'
             }
             
         }
-    }
-   stages{
+
+   
         stage("Static analysis with sonaqube"){
             steps{
                withSonarQubeEnv('sonar') {
@@ -37,5 +37,5 @@ pipeline{
             
         }
     }
-}
+
 
