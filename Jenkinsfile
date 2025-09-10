@@ -30,5 +30,10 @@ pipeline {
                 }
             }
         }
+        stage("trivy scan"){
+            steps{
+                sh 'trviy fs .'
+            }
+        }
     }
 }
