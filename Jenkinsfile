@@ -1,41 +1,34 @@
-pipeline{
+pipeline {
     agent any
     tools {
-        jkd 'jdk17'
-        }
-    environment{
+        jdk 'jdk17'   // corrected: was "jkd"
+    }
+    environment {
         SCANNER_HOME = tool 'sonar-scanner'
     }
-    stages{
-        stage("Cleaup"){
-            steps{
-                cleanWS()
+    stages {
+        stage("Cleanup") {
+            steps {
+                cleanWs()   // corrected: was cleanWS()
             }
-            
-        }
-    }
-    
-        stage("checkup"){
-            steps{
-                git branch:main, url:'https://github.com/chumaedeogu/MY-DevSecOps.git'
-            }
-            
         }
 
-   
-        stage("Static analysis with sonaqube"){
-            steps{
-               withSonarQubeEnv('sonar') {
-             sh """
-        $SCANNER_HOME/bin/sonar-scanner \
-        -Dsonar.projectKey=myProjectKey \
-        -Dsonar.sources=. 
-        
-            """
+        stage("Checkout") {
+            steps {
+                git branch: 'main', url: 'https://github.com/chumaedeogu/MY-DevSecOps.git'
+            }
+        }
+
+        stage("Static analysis with SonarQube") {
+            steps {
+                withSonarQubeEnv('sonar') {   // 'sonar' must match the name you configured in Jenkins > Manage Jenkins > System > SonarQube servers
+                    sh """
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectKey=myProjectKey \
+                        -Dsonar.sources=.
+                    """
                 }
             }
-            
         }
     }
-
-
+}
