@@ -47,7 +47,8 @@ pipeline {
 
         stage("build the image"){
             steps{
-                docker build -t netflix --build-args TMDM-v4-API-KEY=${TMDB_API_KEY} .
+              
+                docker build -t netflix --build-arg TMDM-v4-API-KEY=${TMDB_API_KEY} .
             }
         }
     }
