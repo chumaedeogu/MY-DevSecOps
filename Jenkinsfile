@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
+        TMDB_API_KEY = credentials('TMDB') 
     }
     stages {
         stage("Cleanup") {
@@ -30,9 +31,23 @@ pipeline {
                 }
             }
         }
+       stage("Quality Gate") {
+    
+          steps {
+              timeout(time: 10, unit: 'MINUTES') {
+               waitForQualityGate abortPipeline: true
+              }
+          }
+       }
         stage("trivy scan"){
             steps{
-                sh 'trviy fs .'
+                sh 'trivy fs .'
+            }
+        }
+
+        stage("build the image"){
+            steps{
+                docker build -t netflix --build-args 'TMDM-v4-API-KEY'=${TMDB_API_KEY} .
             }
         }
     }
